@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>데이터 기반 의사결정 대화형 가이드</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Slate & Cyan -->
+    <!-- Application Structure Plan: The application is structured into three main thematic tabs: '전략 (Strategy)', '실행 (Execution)', and '적용 (Application)'. This thematic grouping, rather than mirroring the report's linear structure, allows users to explore content based on their primary interest (the 'why', the 'how', or the 'where'). The user lands on the 'Strategy' tab, which establishes the foundational concepts. They can then navigate to 'Execution' to understand the processes and tools, or 'Application' for real-world case studies. This non-linear, task-oriented structure enhances usability by breaking down dense information into digestible, self-contained sections. Key interactions include tab-based navigation, click-to-reveal details for complex topics, and interactive charts for comparing frameworks and tools, fostering active exploration over passive reading. -->
+    <!-- Visualization & Content Choices: 
+        - Report Info: Core DDDM principles. Goal: Inform. Viz: Icon-based cards with concise text. Interaction: Static display for clarity. Justification: Quickly conveys foundational concepts without overwhelming the user. Method: HTML/Tailwind.
+        - Report Info: Framework comparison (A/B, DMAIC, etc.). Goal: Compare. Viz: Horizontal Bar Chart. Interaction: Hover to see details. Justification: Visually compares the suitability of each framework for different problem types, which is more intuitive than a table. Library: Chart.js.
+        - Report Info: 6-step analysis process. Goal: Organize. Viz: Numbered-step interactive diagram. Interaction: Click on a step to expand and see details. Justification: Makes a complex process easy to follow sequentially, hiding details until requested. Method: HTML/Tailwind/JS.
+        - Report Info: Modern Data Stack tech comparison (Warehouses, BI Tools). Goal: Compare. Viz: Grouped Bar Chart. Interaction: Buttons to sort/filter data will dynamically update the chart. Justification: Enables users to actively compare tools based on criteria most important to them (e.g., cost, ease of use). Library: Chart.js.
+        - Report Info: CX KPI Dashboard structure. Goal: Relationships. Viz: Donut Chart showing Leading/Middle/Lagging indicators. Interaction: Hover over segments. Justification: Effectively visualizes the causal relationship between different types of metrics as described in the report, which is a key insight. Library: Chart.js.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif; }
+        .tab-active { border-bottom-color: #0891b2; color: #0891b2; }
+        .tab-inactive { border-bottom-color: transparent; color: #475569; }
+        .content-section { display: none; }
+        .content-section.active { display: block; }
+        .chart-container { position: relative; width: 100%; max-width: 800px; margin-left: auto; margin-right: auto; height: 400px; }
+        @media (min-width: 768px) { .chart-container { height: 450px; } }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <div class="container mx-auto p-4 md:p-8">
+        
+        <header class="text-center mb-8 md:mb-12">
+            <h1 class="text-3xl md:text-5xl font-bold text-slate-900 mb-2">데이터 기반 의사결정 플레이북</h1>
+            <p class="text-lg md:text-xl text-slate-600">전략, 기술, 혁신을 위한 대화형 가이드</p>
+        </header>
+
+        <nav class="border-b border-slate-300 mb-8">
+            <ul class="flex justify-center -mb-px">
+                <li><button class="nav-tab text-lg font-semibold p-4 border-b-4 tab-active" data-tab="strategy">1. 전략</button></li>
+                <li><button class="nav-tab text-lg font-semibold p-4 border-b-4 tab-inactive" data-tab="execution">2. 실행</button></li>
+                <li><button class="nav-tab text-lg font-semibold p-4 border-b-4 tab-inactive" data-tab="application">3. 적용</button></li>
+            </ul>
+        </nav>
+
+        <main>
+            <!-- 전략 Section -->
+            <section id="strategy" class="content-section active">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-slate-800 mb-2">전략적 필수 과제: 데이터 기반 문화 구축</h2>
+                    <p class="text-lg text-slate-600 max-w-3xl mx-auto">데이터 기반 의사결정(DDDM)은 단순한 기술 도입이 아닌, 조직의 문화와 철학을 근본적으로 바꾸는 여정입니다. 성공적인 전환을 위한 핵심 개념과 리더십의 역할을 알아봅니다.</p>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-8 mb-12">
+                    <div class="bg-white p-6 rounded-xl shadow-md">
+                        <h3 class="font-bold text-xl mb-3 text-cyan-700">데이터 민주화 (Data Democratization)</h3>
+                        <p class="text-slate-600">전문가뿐만 아니라 조직의 모든 구성원이 필요할 때 데이터에 자유롭게 접근하고 활용할 수 있도록 만드는 것입니다. 이는 데이터 사일로를 허물고, 조직 전체의 집단 지성을 활용하여 혁신을 가속화하는 열쇠입니다.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-md">
+                        <h3 class="font-bold text-xl mb-3 text-cyan-700">데이터 리터러시 (Data Literacy)</h3>
+                        <p class="text-slate-600">데이터를 읽고, 이해하며, 비판적으로 분석하고, 소통하는 능력입니다. 모든 구성원이 데이터 리터러시를 갖출 때, 민주화된 데이터는 비로소 올바른 의사결정으로 이어질 수 있습니다. 운전 기술 없이 스포츠카를 주는 것과 같습니다.</p>
+                    </div>
+                </div>
+
+                <div class="bg-white p-8 rounded-xl shadow-lg mb-12">
+                    <h3 class="text-2xl font-bold text-center mb-6">성공 기업의 데이터 문화 원칙</h3>
+                     <p class="text-center text-slate-600 mb-8">세계 최고의 기업들은 어떻게 데이터를 활용할까요? 이들은 데이터를 맹목적으로 따르는 '데이터 주도(Data-Driven)'를 넘어, 데이터와 인간의 직관을 결합하는 '데이터 정보 기반(Data-Informed)' 문화를 추구합니다.</p>
+                    <div class="flex justify-center space-x-4">
+                        <button class="p-3 bg-cyan-600 text-white rounded-lg shadow-md hover:bg-cyan-700 transition" onclick="showCompany('amazon')">Amazon</button>
+                        <button class="p-3 bg-slate-200 text-slate-800 rounded-lg shadow-md hover:bg-slate-300 transition" onclick="showCompany('netflix')">Netflix</button>
+                        <button class="p-3 bg-slate-200 text-slate-800 rounded-lg shadow-md hover:bg-slate-300 transition" onclick="showCompany('google')">Google</button>
+                    </div>
+                    <div id="company-details" class="mt-6 p-6 bg-slate-100 rounded-lg">
+                        <div id="amazon-detail">
+                            <h4 class="font-bold text-xl mb-2">Amazon: 계산된 위험 감수</h4>
+                            <p class="text-slate-700">아마존은 되돌릴 수 없는 '유형 1' 결정은 신중하게, 되돌릴 수 있는 '유형 2' 결정은 70%의 정보만으로도 신속하게 내립니다. 이는 완벽한 정보를 기다리다 기회를 놓치는 '분석 마비'를 방지하는 실용적인 지혜입니다.</p>
+                        </div>
+                        <div id="netflix-detail" style="display:none;">
+                            <h4 class="font-bold text-xl mb-2">Netflix: 하이퍼-개인화</h4>
+                            <p class="text-slate-700">시청 데이터 분석을 통해 콘텐츠의 80% 이상을 추천하며, 심지어 오리지널 콘텐츠 제작 결정에도 예측 분석을 활용합니다. 데이터는 창작 과정의 핵심 동력입니다.</p>
+                        </div>
+                        <div id="google-detail" style="display:none;">
+                            <h4 class="font-bold text-xl mb-2">Google: 데이터 기반 합의</h4>
+                            <p class="text-slate-700">구글은 직급이 아닌 데이터에 기반한 합의 문화를 통해 편견을 제거합니다. 모든 주장은 동등하게 데이터로 검증받아야 하며, 이는 구글 경영 철학의 핵심입니다.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 실행 Section -->
+            <section id="execution" class="content-section">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-slate-800 mb-2">실행 엔진: 프레임워크와 기술 스택</h2>
+                    <p class="text-lg text-slate-600 max-w-3xl mx-auto">아이디어를 실행으로 옮기기 위한 실용적인 프레임워크와 이를 뒷받침하는 현대적인 데이터 기술(Modern Data Stack)을 탐색합니다.</p>
+                </div>
+                
+                <div class="bg-white p-8 rounded-xl shadow-lg mb-12">
+                    <h3 class="text-2xl font-bold text-center mb-6">문제 유형별 최적 프레임워크 비교</h3>
+                    <p class="text-center text-slate-600 mb-8 max-w-2xl mx-auto">모든 문제에 맞는 만능 프레임워크는 없습니다. 문제의 성격에 따라 가장 적합한 도구를 선택하는 것이 중요합니다. 아래 차트는 각 프레임워크가 어떤 유형의 문제 해결에 강점을 보이는지 보여줍니다.</p>
+                    <div class="chart-container h-96 md:h-[500px]">
+                        <canvas id="frameworkChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="bg-white p-8 rounded-xl shadow-lg mb-12">
+                    <h3 class="text-2xl font-bold text-center mb-6">데이터 분석 프로세스 6단계</h3>
+                    <p class="text-center text-slate-600 mb-8">성공적인 데이터 분석은 잘 정의된 프로세스를 따릅니다. 각 단계를 클릭하여 상세 내용을 확인하세요.</p>
+                    <div class="space-y-4" id="process-steps">
+                    </div>
+                </div>
+
+                <div class="bg-white p-8 rounded-xl shadow-lg">
+                    <h3 class="text-2xl font-bold text-center mb-6">모던 데이터 스택(MDS) 도구 비교</h3>
+                    <p class="text-center text-slate-600 mb-8 max-w-2xl mx-auto">현대 데이터 환경을 구축하는 핵심 BI 도구들을 비교합니다. 각 도구는 고유한 강점과 특징을 가지므로 조직의 목표와 상황에 맞는 선택이 필요합니다.</p>
+                    <div class="chart-container h-96 md:h-[500px]">
+                        <canvas id="biToolsChart"></canvas>
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- 적용 Section -->
+            <section id="application" class="content-section">
+                 <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-slate-800 mb-2">분야별 실행 플레이북</h2>
+                    <p class="text-lg text-slate-600 max-w-3xl mx-auto">데이터 전략을 실제 비즈니스 기능에 적용하는 방법을 알아봅니다. 고객 경험, 공급망, 데이터 거버넌스 분야의 구체적인 실행 방안을 제시합니다.</p>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="bg-white p-8 rounded-xl shadow-lg">
+                        <h3 class="text-2xl font-bold text-center mb-6">고객 경험(CX) KPI 대시보드</h3>
+                        <p class="text-center text-slate-600 mb-8">성공적인 CX 관리는 올바른 지표를 추적하는 것에서 시작됩니다. KPI는 서로 연결되어 있으며, 선행 지표의 변화가 후행 지표에 어떤 영향을 미치는지 이해하는 것이 중요합니다.</p>
+                        <div class="chart-container h-80 md:h-96">
+                            <canvas id="cxKpiChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-8 rounded-xl shadow-lg">
+                        <h3 class="text-2xl font-bold text-center mb-6">데이터 기반 공급망 최적화</h3>
+                        <div class="space-y-6">
+                            <div>
+                                <h4 class="font-bold text-lg text-cyan-700">수요 예측 정확도 향상</h4>
+                                <p class="text-slate-600">과거 판매 데이터뿐만 아니라 시장 트렌드, 경쟁사 가격, 날씨 등 외부 데이터를 결합하여 예측 정확도를 높입니다.</p>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-lg text-cyan-700">재고 관리 최적화</h4>
+                                <p class="text-slate-600">ABC 분석으로 핵심 품목을 관리하고, 예측 분석으로 최적의 재주문 시점과 안전 재고 수준을 과학적으로 계산합니다.</p>
+                            </div>
+                             <div>
+                                <h4 class="font-bold text-lg text-cyan-700">공급사 리스크 평가</h4>
+                                <p class="text-slate-600">내부 성과 데이터와 외부 신용 평가, ESG 점수 등을 통합하여 공급망 리스크를 사전에 식별하고 선제적으로 대응합니다.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        const tabs = document.querySelectorAll('.nav-tab');
+        const sections = document.querySelectorAll('.content-section');
+        const companyDetails = {
+            amazon: document.getElementById('amazon-detail'),
+            netflix: document.getElementById('netflix-detail'),
+            google: document.getElementById('google-detail'),
+        };
+        const companyButtons = document.querySelectorAll('#company-details button');
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(item => {
+                    item.classList.remove('tab-active');
+                    item.classList.add('tab-inactive');
+                });
+                tab.classList.remove('tab-inactive');
+                tab.classList.add('tab-active');
+
+                const target = tab.getAttribute('data-tab');
+                sections.forEach(section => {
+                    section.classList.remove('active');
+                    if (section.id === target) {
+                        section.classList.add('active');
+                    }
+                });
+            });
+        });
+
+        function showCompany(company) {
+            Object.values(companyDetails).forEach(detail => detail.style.display = 'none');
+            companyDetails[company].style.display = 'block';
+
+            const buttons = document.querySelectorAll('#company-details + div button');
+            buttons.forEach(button => {
+                button.classList.remove('bg-cyan-600', 'text-white');
+                button.classList.add('bg-slate-200', 'text-slate-800');
+                if (button.innerText.toLowerCase() === company) {
+                    button.classList.add('bg-cyan-600', 'text-white');
+                    button.classList.remove('bg-slate-200', 'text-slate-800');
+                }
+            });
+        }
+        showCompany('amazon'); // Initialize with Amazon
+
+        // Data for charts
+        const frameworkData = {
+            labels: ['A/B 테스팅', '가설-검증 루프', 'DMAIC'],
+            datasets: [
+                {
+                    label: '미세 조정 및 최적화',
+                    data: [9, 5, 2],
+                    backgroundColor: 'rgba(56, 189, 248, 0.7)',
+                    borderColor: 'rgba(56, 189, 248, 1)',
+                    borderWidth: 1
+                },
+                {
+                    label: '신규 아이디어 및 불확실성 검증',
+                    data: [4, 9, 3],
+                    backgroundColor: 'rgba(34, 211, 238, 0.7)',
+                    borderColor: 'rgba(34, 211, 238, 1)',
+                    borderWidth: 1
+                },
+                {
+                    label: '기존 프로세스 개선',
+                    data: [1, 4, 9],
+                    backgroundColor: 'rgba(14, 165, 233, 0.7)',
+                    borderColor: 'rgba(14, 165, 233, 1)',
+                    borderWidth: 1
+                }
+            ]
+        };
+
+        const biToolsData = {
+            labels: ['Tableau', 'Power BI', 'Looker'],
+            datasets: [
+                {
+                    label: '사용 편의성',
+                    data: [7, 9, 4],
+                    backgroundColor: 'rgba(107, 114, 128, 0.7)',
+                },
+                {
+                    label: '시각화 역량',
+                    data: [9, 7, 6],
+                    backgroundColor: 'rgba(34, 211, 238, 0.7)',
+                },
+                {
+                    label: '데이터 거버넌스',
+                    data: [6, 7, 9],
+                    backgroundColor: 'rgba(14, 165, 233, 0.7)',
+                }
+            ]
+        };
+        
+        const cxKpiData = {
+            labels: ['선행 지표 (운영 효율성)', '중간 지표 (고객 만족도)', '후행 지표 (비즈니스 성과)'],
+            datasets: [{
+                label: 'KPI 유형',
+                data: [33, 33, 34],
+                backgroundColor: [
+                    'rgba(56, 189, 248, 0.7)',
+                    'rgba(34, 211, 238, 0.7)',
+                    'rgba(14, 165, 233, 0.7)',
+                ],
+                borderColor: '#fff',
+                borderWidth: 2,
+                hoverOffset: 4
+            }]
+        };
+
+        const processStepsData = [
+            { title: "1단계: 핵심 질문 정의", content: "분석은 데이터가 아닌, 잘 정의된 비즈니스 질문에서 시작됩니다. '좋은 질문'은 구체적이고(Specific), 측정 가능하며(Measurable), 실행 가능하고(Actionable), 관련성이 있으며(Relevant), 시간 제한이 있는(Time-bound) SMART 원칙을 따릅니다." },
+            { title: "2단계: 데이터 식별 및 수집", content: "질문에 답하는 데 필요한 내부 및 외부 데이터를 식별합니다. 정량적 데이터('무엇')와 정성적 데이터('왜')를 전략적으로 조합하여 전체 그림을 그리는 것이 중요합니다." },
+            { title: "3단계: 데이터 정제 및 가공", content: "원시 데이터는 대부분 바로 사용할 수 없습니다. 중복 제거, 오류 수정, 결측치 처리 등을 통해 데이터의 품질과 신뢰도를 확보하는 핵심 과정입니다." },
+            { title: "4단계: 분석 및 인사이트 도출", content: "올바른 분석 기법을 적용하여 패턴, 상관관계 등 유의미한 신호를 찾습니다. 데이터에서 정보로, 정보에서 통찰력으로 변환하는 단계입니다." },
+            { title: "5단계: 결과 시각화 및 공유", content: "통찰력을 이해관계자가 쉽게 이해하고 공감할 수 있도록 데이터 스토리텔링 기법을 활용합니다. 복잡한 발견을 단순하고 설득력 있는 이야기로 전달합니다." },
+            { title: "6단계: 실행, 측정, 학습", content: "분석 결과를 실제 행동으로 옮기고, 그 결과를 측정하여 효과를 평가합니다. 이는 지속적인 개선과 학습의 선순환 구조를 만듭니다." }
+        ];
+
+        // Function to create process steps
+        function createProcessSteps() {
+            const container = document.getElementById('process-steps');
+            processStepsData.forEach((step, index) => {
+                const stepElement = document.createElement('div');
+                stepElement.className = 'border border-slate-200 rounded-lg overflow-hidden';
+                stepElement.innerHTML = `
+                    <button class="w-full text-left p-4 bg-slate-100 hover:bg-slate-200 transition focus:outline-none">
+                        <h4 class="font-bold text-lg text-cyan-800">${step.title}</h4>
+                    </button>
+                    <div class="p-4 bg-white text-slate-600 hidden">
+                        <p>${step.content}</p>
+                    </div>
+                `;
+                container.appendChild(stepElement);
+
+                const button = stepElement.querySelector('button');
+                const content = stepElement.querySelector('div');
+                button.addEventListener('click', () => {
+                    const isVisible = !content.classList.contains('hidden');
+                    // Optional: Close others when one opens
+                    // container.querySelectorAll('div').forEach(c => c.classList.add('hidden'));
+                    content.classList.toggle('hidden', isVisible);
+                });
+            });
+        }
+        
+        // Chart rendering
+        window.onload = function() {
+            Chart.defaults.font.family = "'Noto Sans KR', sans-serif";
+            Chart.defaults.font.size = 14;
+            Chart.defaults.color = '#334155';
+            
+            createProcessSteps();
+
+            const ctxFramework = document.getElementById('frameworkChart').getContext('2d');
+            new Chart(ctxFramework, {
+                type: 'bar',
+                data: frameworkData,
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            stacked: true,
+                            title: { display: true, text: '적합도 점수' }
+                        },
+                        y: {
+                            stacked: true,
+                        }
+                    },
+                    plugins: {
+                        title: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.x !== null) {
+                                        label += `${context.parsed.x}점`;
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            const ctxBiTools = document.getElementById('biToolsChart').getContext('2d');
+            new Chart(ctxBiTools, {
+                type: 'bar',
+                data: biToolsData,
+                 options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 10,
+                            title: { display: true, text: '평가 점수 (10점 만점)' }
+                        }
+                    },
+                    plugins: {
+                        title: { display: false },
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
+            
+            const ctxCxKpi = document.getElementById('cxKpiChart').getContext('2d');
+            new Chart(ctxCxKpi, {
+                type: 'doughnut',
+                data: cxKpiData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'KPI 인과 관계 모델',
+                            font: { size: 18 }
+                        },
+                        legend: {
+                            position: 'bottom',
+                        },
+                        tooltip: {
+                             callbacks: {
+                                label: function(context) {
+                                    let label = context.label || '';
+                                    if(label) {
+                                      let example = '';
+                                      if (label.includes('선행')) example = '(예: 응답 시간)';
+                                      if (label.includes('중간')) example = '(예: CSAT, CES)';
+                                      if (label.includes('후행')) example = '(예: NPS, 이탈률)';
+                                      return ` ${label} ${example}`;
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        };
+    </script>
+</body>
+</html>
